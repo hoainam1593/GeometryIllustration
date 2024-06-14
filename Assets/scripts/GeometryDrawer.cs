@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GeometryDrawer
 {
-    private static void CreateLineRenderer(List<Vector2> lPoints)
+    private static void CreateLineRenderer(List<Vector2> lPoints, Color color)
     {
 		//spawn
 		var prefab = Resources.Load<LineRenderer>("line-unit/line-unit");
@@ -21,6 +21,9 @@ public class GeometryDrawer
 		var lineThickness = GeometryDrawerConfig.instance.lineThickness;
 		line.startWidth = lineThickness;
 		line.endWidth = lineThickness;
+
+		//set color
+		line.material.color = color;
 	}
 
 	private static void CreateText(string str, Vector2 pos)
@@ -31,7 +34,7 @@ public class GeometryDrawer
 		text.text = str;
 	}
 
-	public static void DrawLine(List<PointInfo> lPoints)
+	public static void DrawLine(List<PointInfo> lPoints, Color color)
 	{
 		var dist = GeometryDrawerConfig.instance.textPointDistance;
 		var lPos = new List<Vector2>();
@@ -47,10 +50,10 @@ public class GeometryDrawer
 			lPos.Add(lPoints[i].p);
 		}
 
-		CreateLineRenderer(lPos);
+		CreateLineRenderer(lPos, color);
 	}
 
-	public static void DrawTriangle(List<PointInfo> lPoints)
+	public static void DrawTriangle(List<PointInfo> lPoints, Color color)
 	{
 		var dist = GeometryDrawerConfig.instance.textPointDistance;
 		var lPos = new List<Vector2>();
@@ -70,10 +73,10 @@ public class GeometryDrawer
 		}
 		lPos.Add(lPoints[0].p);
 
-		CreateLineRenderer(lPos);
+		CreateLineRenderer(lPos, color);
 	}
 
-	public static void DrawCircle(Vector2 center, float radius)
+	public static void DrawCircle(Vector2 center, float radius, Color color)
 	{
 		var res = GeometryDrawerConfig.instance.circleResolution;
 		var pieceAngle = (2 * Mathf.PI) / res;
@@ -85,6 +88,6 @@ public class GeometryDrawer
 			p += center;
 			lPoints.Add(p);
 		}
-		CreateLineRenderer(lPoints);
+		CreateLineRenderer(lPoints, color);
 	}
 }
