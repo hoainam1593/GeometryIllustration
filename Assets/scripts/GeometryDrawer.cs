@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GeometryDrawer
@@ -22,14 +23,54 @@ public class GeometryDrawer
 		line.endWidth = lineThickness;
 	}
 
-	public static void DrawLine(Vector2 p1, Vector2 p2)
+	private static void CreateText(string str, Vector2 pos)
 	{
-		CreateLineRenderer(new List<Vector2>() { p1, p2 });
+		var prefab = Resources.Load<TextMeshPro>("text");
+		var text = Object.Instantiate(prefab);
+		text.transform.position = pos;
+		text.text = str;
 	}
 
-	public static void DrawTriangle(Vector2 p1, Vector2 p2, Vector2 p3)
+	public static void DrawLine(List<PointInfo> lPoints)
 	{
-		CreateLineRenderer(new List<Vector2>() { p1, p2, p3, p1 });
+		var dist = GeometryDrawerConfig.instance.textPointDistance;
+		var lPos = new List<Vector2>();
+		for (var i = 0; i < lPoints.Count; i++)
+		{
+			if (!string.IsNullOrEmpty(lPoints[i].label))
+			{
+				var p1 = lPoints[i].p;
+				var p2 = lPoints[1 - i].p;
+				var v = (p1 - p2).normalized;
+				CreateText(lPoints[i].label, p1 + dist * v);
+			}
+			lPos.Add(lPoints[i].p);
+		}
+
+		CreateLineRenderer(lPos);
+	}
+
+	public static void DrawTriangle(List<PointInfo> lPoints)
+	{
+		var dist = GeometryDrawerConfig.instance.textPointDistance;
+		var lPos = new List<Vector2>();
+		for (var i = 0; i < lPoints.Count; i++)
+		{
+			if (!string.IsNullOrEmpty(lPoints[i].label))
+			{
+				var p0 = lPoints[i].p;
+				var p1Idx = i - 1 >= 0 ? i - 1 : i + 1;
+				var p1 = lPoints[p1Idx].p;
+				var p2 = lPoints[3 - p1Idx - i].p;
+				var pm = (p1 + p2) / 2;
+				var v = (p0 - pm).normalized;
+				CreateText(lPoints[i].label, p0 + dist * v);
+			}
+			lPos.Add(lPoints[i].p);
+		}
+		lPos.Add(lPoints[0].p);
+
+		CreateLineRenderer(lPos);
 	}
 
 	public static void DrawCircle(Vector2 center, float radius)

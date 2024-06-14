@@ -5,6 +5,7 @@ public class GeometryDrawerConfig : ScriptableObject
 {
 	public float lineThickness;
 	public int circleResolution;
+	public float textPointDistance;
 
 	public static GeometryDrawerConfig instance => Resources.Load<GeometryDrawerConfig>("GeometryDrawerConfig");
 }
