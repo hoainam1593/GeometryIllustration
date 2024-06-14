@@ -27,6 +27,11 @@ public class GeometryDrawer
 		CreateLineRenderer(new List<Vector2>() { p1, p2 });
 	}
 
+	public static void DrawTriangle(Vector2 p1, Vector2 p2, Vector2 p3)
+	{
+		CreateLineRenderer(new List<Vector2>() { p1, p2, p3, p1 });
+	}
+
 	public static void DrawCircle(Vector2 center, float radius)
 	{
 		var res = GeometryDrawerConfig.instance.circleResolution;
