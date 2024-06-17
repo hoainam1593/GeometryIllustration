@@ -90,4 +90,55 @@ public class GeometryDrawer
 		}
 		CreateLineRenderer(lPoints, color);
 	}
+
+	#region DrawAngleLabel
+
+	public static void DrawAngleLabel(Vector2 p1, Vector2 p2, Vector2 p3, Color color)
+	{
+		//draw arc
+		var v1 = (p2 - p1).normalized;
+		var v2 = (p3 - p1).normalized;
+		var angleInRad = Mathf.Acos(Vector2.Dot(v1, v2));
+
+		var arcRadius = GeometryDrawerConfig.instance.angleLabel.arcRadius;
+		Vector2? beginPoint = p1 + arcRadius * v1;
+		Vector2? endPoint = p1 + arcRadius * v2;
+
+		var lPointsRef = new List<Vector2?>() { beginPoint, endPoint };
+		CreateArcMiddlePoint(lPointsRef, angleInRad, beginPoint, endPoint, p1);
+
+		var lPoints = new List<Vector2>();
+		foreach (var i in lPointsRef)
+		{
+			lPoints.Add(i.Value);
+		}
+		CreateLineRenderer(lPoints, color);
+
+		//draw text
+		var v = (v1 + v2).normalized;
+		var angleInDeg = Mathf.RoundToInt(angleInRad * 180 / Mathf.PI);
+		var textDist = GeometryDrawerConfig.instance.angleLabel.textPointDistance;
+		CreateText($"{angleInDeg}\u00B0", p1 + textDist * v);
+	}
+
+	private static void CreateArcMiddlePoint(List<Vector2?> lPoints, float angleInRad, Vector2? beginPoint, Vector2? endPoint, Vector2 root)
+	{
+		var res = GeometryDrawerConfig.instance.circleResolution;
+		var pieceAngle = (2 * Mathf.PI) / res;
+		if (angleInRad < pieceAngle)
+		{
+			return;
+		}
+
+		var center = (beginPoint.Value + endPoint.Value) / 2;
+		var v = (center - root).normalized;
+		var arcRadius = GeometryDrawerConfig.instance.angleLabel.arcRadius;
+		Vector2? centerRef = root + arcRadius * v;
+		lPoints.Insert(lPoints.IndexOf(endPoint), centerRef);
+
+		CreateArcMiddlePoint(lPoints, angleInRad / 2, beginPoint, centerRef, root);
+		CreateArcMiddlePoint(lPoints, angleInRad / 2, centerRef, endPoint, root);
+	}
+
+	#endregion
 }
