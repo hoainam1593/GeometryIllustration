@@ -7,6 +7,7 @@ public class GeometryDrawerConfig : ScriptableObject
 	public class AngleLabel
 	{
 		public float arcRadius;
+		public float arcRadiusOrthogonal;
 		public float textPointDistance;
 	}
 

@@ -95,11 +95,19 @@ public class GeometryDrawer
 
 	public static void DrawAngleLabel(Vector2 p1, Vector2 p2, Vector2 p3, Color color)
 	{
-		//draw arc
 		var v1 = (p2 - p1).normalized;
 		var v2 = (p3 - p1).normalized;
 		var angleInRad = Mathf.Acos(Vector2.Dot(v1, v2));
+		var angleInDeg = Mathf.RoundToInt(angleInRad * 180 / Mathf.PI);
 
+		//handle the case orthogonal
+		if (angleInDeg == 90)
+		{
+			DrawAngleLabel_orthogonal(p1, p2, p3, color);
+			return;
+		}
+
+		//draw arc
 		var arcRadius = GeometryDrawerConfig.instance.angleLabel.arcRadius;
 		Vector2? beginPoint = p1 + arcRadius * v1;
 		Vector2? endPoint = p1 + arcRadius * v2;
@@ -116,9 +124,20 @@ public class GeometryDrawer
 
 		//draw text
 		var v = (v1 + v2).normalized;
-		var angleInDeg = Mathf.RoundToInt(angleInRad * 180 / Mathf.PI);
 		var textDist = GeometryDrawerConfig.instance.angleLabel.textPointDistance;
 		CreateText($"{angleInDeg}\u00B0", p1 + textDist * v);
+	}
+
+	private static void DrawAngleLabel_orthogonal(Vector2 p1, Vector2 p2, Vector2 p3, Color color)
+	{
+		var arcRadius = GeometryDrawerConfig.instance.angleLabel.arcRadiusOrthogonal;
+		var v1 = (p2 - p1).normalized;
+		var v2 = (p3 - p1).normalized;
+		var lPoints = new List<Vector2>();
+		lPoints.Add(p1 + arcRadius * v1);
+		lPoints.Add(lPoints[0] + arcRadius * v2);
+		lPoints.Add(p1 + arcRadius * v2);
+		CreateLineRenderer(lPoints, color);
 	}
 
 	private static void CreateArcMiddlePoint(List<Vector2?> lPoints, float angleInRad, Vector2? beginPoint, Vector2? endPoint, Vector2 root)

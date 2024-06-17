@@ -1,25 +1,62 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SceneController : MonoBehaviour
 {
 	private void Start()
 	{
-		var p1 = new Vector2(1, 0);
-		var p2 = new Vector2(1, 1);
+		Drawing_1();
+	}
 
-		GeometryDrawer.DrawAngleLabel(new Vector2(0, 0),
-			p1, p2, Color.black);
+	private void Drawing_1()
+	{
+		var sideLength = 3;
 
-		GeometryDrawer.DrawLine(new System.Collections.Generic.List<PointInfo>()
+		var pointB = new Vector2(-sideLength, 0);
+		var pointC = new Vector2(sideLength, 0);
+
+		var pointHB = new Vector2(0, sideLength);
+		var pointHC = new Vector2(0, sideLength * Mathf.Tan(Mathf.PI / 6));
+
+		var lineHB = new Line(pointB, pointHB);
+		var lineHC = new Line(pointC, pointHC);
+
+		var pointA = lineHB.Intersect(lineHC).Value;
+
+		var moveX = pointA.x;
+
+		pointA.x -= moveX;
+		pointB.x -= moveX;
+		pointC.x -= moveX;
+
+		var pointD = new Vector2(pointA.y / Mathf.Tan(Mathf.PI / 3), 0);
+
+		GeometryDrawer.DrawTriangle(new List<PointInfo>()
 		{
-			new PointInfo(new Vector2(0,0)),
-			new PointInfo(p1)
+			new PointInfo(pointA,"A"),
+			new PointInfo(pointB,"B"),
+			new PointInfo(pointC,"C"),
 		}, Color.black);
 
-		GeometryDrawer.DrawLine(new System.Collections.Generic.List<PointInfo>()
+		GeometryDrawer.DrawAngleLabel(pointB, pointA, pointC, Color.black);
+		GeometryDrawer.DrawAngleLabel(pointC, pointA, pointB, Color.black);
+
+		GeometryDrawer.DrawLine(new List<PointInfo>()
 		{
-			new PointInfo(new Vector2(0,0)),
-			new PointInfo(p2)
+			new PointInfo(pointA),
+			new PointInfo(pointD,"D"),
 		}, Color.black);
+
+		GeometryDrawer.DrawAngleLabel(pointD, pointA, pointB, Color.black);
+
+		var pointH = new Vector2(0, 0);
+
+		GeometryDrawer.DrawLine(new List<PointInfo>()
+		{
+			new PointInfo(pointA),
+			new PointInfo(pointH,"H"),
+		}, Color.black);
+
+		GeometryDrawer.DrawAngleLabel(pointH, pointA, pointB, Color.black);
 	}
 }
