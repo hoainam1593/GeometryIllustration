@@ -8,6 +8,28 @@ public class SceneController : MonoBehaviour
 		Drawing_1();
 	}
 
+	#region drawing 1
+
+	private void ExtraDrawing_1(Vector2 pointA, Vector2 pointB)
+	{
+		var pointM = new Vector2(pointA.y / Mathf.Tan(Mathf.PI / 3), 0);
+		var pointH = new Vector2(0, 0);
+
+		GeometryDrawer.DrawLine(new List<PointInfo>()
+		{
+			new PointInfo(pointA),
+			new PointInfo(pointM,"M"),
+		}, Color.red);
+
+		GeometryDrawer.DrawLine(new List<PointInfo>()
+		{
+			new PointInfo(pointA),
+			new PointInfo(pointH,"H"),
+		}, Color.red);
+
+		GeometryDrawer.DrawAngleLabel(pointH, pointA, pointB, Color.red);
+	}
+
 	private void Drawing_1()
 	{
 		var sideLength = 3;
@@ -29,8 +51,6 @@ public class SceneController : MonoBehaviour
 		pointB.x -= moveX;
 		pointC.x -= moveX;
 
-		var pointD = new Vector2(pointA.y / Mathf.Tan(Mathf.PI / 3), 0);
-
 		GeometryDrawer.DrawTriangle(new List<PointInfo>()
 		{
 			new PointInfo(pointA,"A"),
@@ -41,22 +61,26 @@ public class SceneController : MonoBehaviour
 		GeometryDrawer.DrawAngleLabel(pointB, pointA, pointC, Color.black);
 		GeometryDrawer.DrawAngleLabel(pointC, pointA, pointB, Color.black);
 
+		var vBC = (pointC - pointB).normalized;
+		var BC = Vector2.Distance(pointB, pointC);
+		var BD = BC / Mathf.Pow(12, 0.25f);
+		var pointD = pointB + BD * vBC;
+		var pointE = new Vector2(0, Mathf.Tan(Mathf.PI / 3) * pointD.x);
+
+		var lineED = new Line(pointE, pointD);
+		var lineAB = new Line(pointA, pointB);
+		pointE = lineED.Intersect(lineAB).Value;
+
 		GeometryDrawer.DrawLine(new List<PointInfo>()
 		{
-			new PointInfo(pointA),
-			new PointInfo(pointD,"D"),
+			new PointInfo(pointE, "E"),
+			new PointInfo(pointD, "D"),
 		}, Color.black);
 
-		GeometryDrawer.DrawAngleLabel(pointD, pointA, pointB, Color.black);
+		GeometryDrawer.DrawAngleLabel(pointD, pointE, pointB, Color.black);
 
-		var pointH = new Vector2(0, 0);
-
-		GeometryDrawer.DrawLine(new List<PointInfo>()
-		{
-			new PointInfo(pointA),
-			new PointInfo(pointH,"H"),
-		}, Color.black);
-
-		GeometryDrawer.DrawAngleLabel(pointH, pointA, pointB, Color.black);
+		ExtraDrawing_1(pointA, pointB);
 	}
+
+	#endregion
 }

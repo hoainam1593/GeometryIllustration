@@ -16,6 +16,6 @@ MonoBehaviour:
   circleResolution: 40
   textPointDistance: 0.15
   angleLabel:
-    arcRadius: 0.5
+    arcRadius: 0.4
     arcRadiusOrthogonal: 0.2
-    textPointDistance: 0.75
+    textPointDistance: 0.65

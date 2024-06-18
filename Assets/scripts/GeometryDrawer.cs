@@ -26,12 +26,13 @@ public class GeometryDrawer
 		line.material.color = color;
 	}
 
-	private static void CreateText(string str, Vector2 pos)
+	private static void CreateText(string str, Vector2 pos, Color color)
 	{
 		var prefab = Resources.Load<TextMeshPro>("text");
 		var text = Object.Instantiate(prefab);
 		text.transform.position = pos;
 		text.text = str;
+		text.color = color;
 	}
 
 	public static void DrawLine(List<PointInfo> lPoints, Color color)
@@ -45,7 +46,7 @@ public class GeometryDrawer
 				var p1 = lPoints[i].p;
 				var p2 = lPoints[1 - i].p;
 				var v = (p1 - p2).normalized;
-				CreateText(lPoints[i].label, p1 + dist * v);
+				CreateText(lPoints[i].label, p1 + dist * v, color);
 			}
 			lPos.Add(lPoints[i].p);
 		}
@@ -67,7 +68,7 @@ public class GeometryDrawer
 				var p2 = lPoints[3 - p1Idx - i].p;
 				var pm = (p1 + p2) / 2;
 				var v = (p0 - pm).normalized;
-				CreateText(lPoints[i].label, p0 + dist * v);
+				CreateText(lPoints[i].label, p0 + dist * v, color);
 			}
 			lPos.Add(lPoints[i].p);
 		}
@@ -125,7 +126,7 @@ public class GeometryDrawer
 		//draw text
 		var v = (v1 + v2).normalized;
 		var textDist = GeometryDrawerConfig.instance.angleLabel.textPointDistance;
-		CreateText($"{angleInDeg}\u00B0", p1 + textDist * v);
+		CreateText($"{angleInDeg}\u00B0", p1 + textDist * v, color);
 	}
 
 	private static void DrawAngleLabel_orthogonal(Vector2 p1, Vector2 p2, Vector2 p3, Color color)
