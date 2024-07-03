@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class Line
 {
-    private float coefficientA;
-	private float coefficientB;
-	private float coefficientC;
+    public float coefficientA;
+	public float coefficientB;
+	public float coefficientC;
 
 	public Line(Vector2 p1, Vector2 p2)
     {
@@ -27,16 +27,4 @@ public class Line
 			coefficientC = -p1.x / (p2.x - p1.x) + p1.y / (p2.y - p1.y);
 		}
     }
-
-	public Vector2? Intersect(Line line)
-	{
-		var t = coefficientA * line.coefficientB - coefficientB * line.coefficientA;
-		if (t == 0)
-		{
-			return null;
-		}
-		var x = (coefficientB * line.coefficientC - coefficientC * line.coefficientB) / t;
-		var y = -(coefficientA * line.coefficientC - coefficientC * line.coefficientA) / t;
-		return new Vector2(x, y);
-	}
 }
